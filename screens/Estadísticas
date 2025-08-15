@@ -1,0 +1,265 @@
+import 'package:flutter/material.dart';
+import '../models/team.dart';
+import '../models/game.dart';
+
+class TeamStatsPage extends StatelessWidget {
+  final Team team;
+
+  const TeamStatsPage({Key? key, required this.team}) : super(key: key);
+
+  String getAbbreviation(String name) {
+    final words = name.split(' ');
+    if (words.length > 1) {
+      return words
+          .map((word) => word.isNotEmpty ? word[0].toUpperCase() : '')
+          .join();
+    }
+    return name.length >= 3
+        ? name.substring(0, 3).toUpperCase()
+        : name.toUpperCase();
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final nextGames = team.nextGames;
+    final firstGame =
+        nextGames != null && nextGames.isNotEmpty ? nextGames.first : null;
+
+    return Scaffold(
+      backgroundColor: team.primaryColor.withOpacity(0.9),
+      appBar: AppBar(
+        title: Text(team.name),
+        backgroundColor: team.primaryColor,
+        foregroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Image.network(
+                team.logoUrl,
+                height: 100,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(Icons.sports, size: 100, color: Colors.white);
+                },
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              team.name,
+              style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(1, 1),
+                      blurRadius: 2,
+                      color: Colors.black.withOpacity(0.3),
+                    ),
+                  ]),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20),
+            Column(
+              children: [
+                Card(
+                  color: Colors.white.withOpacity(0.95),
+                  margin: EdgeInsets.only(bottom: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  elevation: 4,
+                  child: ExpansionTile(
+                    title: Text(
+                      'Datos del equipo',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: team.primaryColor),
+                    ),
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Fundación: ${team.foundingYear}',
+                                style: TextStyle(fontSize: 15)),
+                            Text('Campeonatos 🏆: ${team.championships}',
+                                style: TextStyle(fontSize: 15)),
+                            Text('Subcampeonatos 🥈: ${team.runnerUps}',
+                                style: TextStyle(fontSize: 15)),
+                            if (team.lastChampionshipYear != null)
+                              Text(
+                                  'Último campeonato: ${team.lastChampionshipYear}',
+                                  style: TextStyle(fontSize: 15)),
+                            Text('MVPs: ${team.mvpCount}',
+                                style: TextStyle(fontSize: 15)),
+                            Text('MVP más reciente: ${team.recentMvp}',
+                                style: TextStyle(fontSize: 15)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Card(
+                  color: Colors.white.withOpacity(0.95),
+                  margin: EdgeInsets.only(bottom: 16),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                  elevation: 4,
+                  child: ExpansionTile(
+                    title: Text(
+                      'Administración',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                          color: team.primaryColor),
+                    ),
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Dueño: ${team.owner}',
+                                style: TextStyle(fontSize: 15)),
+                            SizedBox(height: 8),
+                            Text('Presidente: ${team.president}',
+                                style: TextStyle(fontSize: 15)),
+                            Text('Gerente General: ${team.generalManager}',
+                                style: TextStyle(fontSize: 15)),
+                            Text('Head Coach: ${team.headCoach}',
+                                style: TextStyle(fontSize: 15)),
+                            Text('Estadio Local: ${team.homeStadium}',
+                                style: TextStyle(fontSize: 15)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 30),
+
+            if (firstGame != null)
+              Column(
+                children: [
+                  Text(
+                    'Próximo juego: ${_formatDate(firstGame.date)}',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                  SizedBox(height: 12),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.95),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Image.network(
+                              team.logoUrl,
+                              width: 60,
+                              height: 60,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(Icons.sports,
+                                    size: 60, color: team.primaryColor);
+                              },
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              getAbbreviation(team.name),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            (firstGame.teamScore != null &&
+                                    firstGame.opponentScore != null)
+                                ? '${firstGame.teamScore} - ${firstGame.opponentScore}'
+                                : 'VS',
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: team.primaryColor,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Image.network(
+                              firstGame.opponentLogoUrl ??
+                                  'https://via.placeholder.com/60',
+                              width: 60,
+                              height: 60,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(Icons.sports,
+                                    size: 60, color: Colors.grey[600]);
+                              },
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              getAbbreviation(firstGame.opponent),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            if (firstGame == null)
+              Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.95),
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  'No hay información del próximo juego',
+                  style: TextStyle(color: Colors.grey[700], fontSize: 15),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
