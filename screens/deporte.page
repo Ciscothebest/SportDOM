@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+import '../widgets/fondo_tricolor.dart';
+import '../widgets/deporte_item.dart';
+import 'baseball_page.dart';
+import 'basketball_page.dart';
+import 'football_page.dart';
+
+class DeportePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FondoTricolor(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: Icon(Icons.arrow_back,
+                              color: Colors.white, size: 28),
+                        ),
+                        Expanded(
+                          child: Text(
+                            'Selecciona tu deporte',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(width: 48),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      'Elige el deporte que más te interese',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.white.withOpacity(0.9),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.95),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: ListView(
+                    padding: EdgeInsets.all(24),
+                    children: [
+                      SizedBox(height: 20),
+                      DeporteItem(
+                        icon: Icons.sports_baseball,
+                        nombre: 'Béisbol',
+                        descripcion: 'Ofensiva y pitcheo en un solo estadio',
+                        color: Color(0xFF1976D2),
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => BaseballPage())),
+                      ),
+                      SizedBox(height: 16),
+                      DeporteItem(
+                        icon: Icons.sports_basketball,
+                        nombre: 'Baloncesto',
+                        descripcion: 'Emoción y destreza en cada jugada',
+                        color: Color(0xFFFF6F00),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => BasketballPage())),
+                      ),
+                      SizedBox(height: 16),
+                      DeporteItem(
+                        icon: Icons.sports_football,
+                        nombre: 'Fútbol Americano',
+                        descripcion: 'Estrategia y poder en el campo',
+                        color: Color(0xFF388E3C),
+                        onTap: () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => FootballPage())),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
